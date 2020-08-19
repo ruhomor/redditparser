@@ -3,10 +3,27 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy import Item, Field
 
 
-class RedditItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
+class RedditPost(Item):
+    link = Field()
+    author = Field()
+    date = Field()
+    text = Field()
+    img_file = Field()
+    vote_count = Field()
+    award_count = Field()
+    comment_count = Field()
+    caption = Field()
+    origin = Field()
+    pass
+
+class SubReddit(Item):
+    name = Field()
+    link = Field()
+    about = Field()
+    rules = Field()
+    similar = Field()
+    moderators = Field()
     pass
