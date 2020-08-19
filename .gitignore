@@ -131,3 +131,4 @@ pyvenv.cfg
 bin
 lib
 include
+.idea
