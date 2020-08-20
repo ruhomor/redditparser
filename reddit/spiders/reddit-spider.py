@@ -53,15 +53,14 @@ class RedditSpider(Spider):
 
         self.params[subreddit]["after"] = json_data["token"]
         self.params[subreddit]["dist"] = json_data["dist"]
+        url = self.scroll_urls[subreddit] + urlencode(self.params[subreddit])
 
         print("--++--++--++--DIST_{}-{}++--++--++--".format(json_data["dist"], subreddit))  # scroll debug
         if self.scrolls[subreddit] > self.number_of_scrolls:  # number of scrolls
-            url = self.scroll_urls[subreddit] + urlencode(self.params[subreddit])
             yield Request(url, callback=self.parse_subreddit)
         else:
             print("-----------SCROLLING-----------")  # debug
             self.scrolls[subreddit] += 1
-            url = self.scroll_urls[subreddit] + urlencode(self.params[subreddit])
             yield Request(url, callback=self.subreddit_scroll)
 
 
