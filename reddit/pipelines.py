@@ -13,14 +13,15 @@ import pandas as pd
 
 
 class PipelineAppendOneByOne:  # TODO fix indices
+
     def __init__(self):
-        self.df = pd.DataFrame(columns=['date', 'title', 'author', 'link'])
+        self.df = pd.DataFrame(columns=["link", "author", "date", "title"])
         self.file = open('data.csv', 'a')
 
     def close_spider(self, spider):
         self.file.close()
 
     def process_item(self, item, spider):
-        self.df.append(dict(item), ignore_index=True)
-        self.df.to_csv(self.file, header=False, encoding='utf-8')
+        print("-------------------processing_an_item-------------------")
+        self.df.append(dict(item), ignore_index=True).to_csv(self.file, header=False)
         return item

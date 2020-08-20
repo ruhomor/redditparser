@@ -72,3 +72,4 @@ class RedditSpider(Spider):
             print(meme["author"])  # content
             print(meme["link"])  # content
             print(meme["date"])  # content
+            yield meme
