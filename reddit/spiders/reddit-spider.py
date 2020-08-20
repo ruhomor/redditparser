@@ -61,11 +61,14 @@ class RedditSpider(Spider):
         print("---------PARSING_PAGE----------")  # debug
         meme = RedditPost()
 
-        post_wrapper = response.xpath("//div[@class = 'rpBJOHq2PR60pnwJlUyP0']")
-        for post in post_wrapper.xpath("./div"):  # TODO skip parsed posts
-            print("----------!Woah Post!----------")  # debug
-            meme["title"] = post.xpath(".//h3[@class='_eYtD2XCVieq6emjKBH3m']/text()").extract()
-            meme["author"] = None  # doesn't load for some unknown reason
-            meme["date"] = post.xpath(".//a[@class='_3jOxDPIQ0KaOWpzvSQo-1s']/text()").extract()
-            meme["link"] = post.xpath(".//a[@data-click-id='comments']/@href").extract()
-            yield meme
+        json_data = json.loads(response.text)
+        for post in json_data["postIds"]:
+            print("----------!Woah Post!----------")
+            meme["title"] = json_data["posts"][post]["title"]
+            meme["author"] = json_data["posts"][post]["author"]
+            meme["link"] = json_data["posts"][post]["permalink"]
+            meme["date"] = json_data["posts"][post]["created"]
+            print(meme["title"])  # content
+            print(meme["author"])  # content
+            print(meme["link"])  # content
+            print(meme["date"])  # content
