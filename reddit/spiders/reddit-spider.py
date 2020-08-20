@@ -7,7 +7,6 @@ from reddit import pipelines
 
 class RedditSpider(Spider):
     name = "reddit"
-    i = 0
     allowed_domains = ["reddit.com"]
     start_urls = ["https://www.reddit.com/login/"]
     subreddits = ["meme",
@@ -44,28 +43,16 @@ class RedditSpider(Spider):
         for subreddit in self.subreddits:
             print("----------{}---------".format(subreddit))  # debug
             url = self.scroll_urls[subreddit] + urlencode(self.params[subreddit])
-            yield Request(url, callback=self.parse_subreddit_scroll)
+            yield Request(url, callback=self.subreddit_scroll)
 
-    def parse_subreddit_scroll(self, response):
-        print("---------PARSING_PAGE----------")  # debug
-        meme = RedditPost()
-
+    def subreddit_scroll(self, response):
         json_data = json.loads(response.text)
         subreddit = json_data["subreddits"][str(list(json_data["subreddits"].keys())[0])]["name"]  # Stupid as f
-
-        post_wrapper = response.xpath("//div[@class = 'rpBJOHq2PR60pnwJlUyP0']")
-        for post in post_wrapper.xpath("./div"):  # TODO skip parsed posts
-            print("----------!Woah Post!----------")  # debug
-            meme["title"] = post.xpath(".//h3[@class='_eYtD2XCVieq6emjKBH3m']/text()").extract()
-            meme["author"] = None  # doesn't load for some unknown reason
-            meme["date"] = post.xpath(".//a[@class='_3jOxDPIQ0KaOWpzvSQo-1s']/text()").extract()
-            meme["link"] = post.xpath(".//a[@data-click-id='comments']/@href").extract()
-            yield meme
 
         self.params[subreddit]["after"] = json_data["token"]
         self.params[subreddit]["dist"] = json_data["dist"]
 
-        for i in range(0, 3):
+        for i in range(0, 3):  # scrolls
             url = self.scroll_urls[subreddit] + urlencode(self.params[subreddit])
             print("-----------SCROLLING-----------")  # debug
             yield Request(url, callback=self.parse_subreddit)
