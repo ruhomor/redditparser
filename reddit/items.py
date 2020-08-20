@@ -8,8 +8,8 @@ from scrapy import Item, Field
 
 class RedditPost(Item):
     link = Field()
-    author = Field() # doesn't load for some unknown reason
+    author = Field()
     date = Field()
     title = Field()
-    img = Field()
+    # img = Field() TODO :#
     pass
