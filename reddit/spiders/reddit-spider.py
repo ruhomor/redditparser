@@ -1,17 +1,32 @@
-from scrapy import Spider, Request
+from scrapy import Spider, Request, FormRequest
 from reddit.items import RedditPost
 from reddit import pipelines
 
 
 class RedditSpider(Spider):
     name = "reddit"
+    allowed_domains = ["reddit.com"]
+    start_urls = ["https://www.reddit.com/login/"]
 
-    def start_requests(self):
+    def parse(self, response): # login function
+        csrf_token = response.xpath("//input[@name='csrf_token']/@value").extract_first()
+        print("TOKEN------------")
+        print(csrf_token)
+        print("TOKEN------------")
+        yield FormRequest.from_response(response,
+                                         formdata={"csrf_token": csrf_token,
+                                                   "username": "belkbe1ka",
+                                                   "password": "be1kabe1ka",
+                                                   "dest": "https://www.reddit.com/"},
+                                         callback=self.after_login)
+
+    def after_login(self, response): # creates request for each subreddit to crawl
+
         subreddits = ["meme",
-                       "dankmemes",
-                       "PoliticalHumor",
+                      "dankmemes",
+                      "PoliticalHumor",
+                      "Anarcho_Capitalism",
                       "ProgrammerAnimemes"]
-
         for subreddit in subreddits:
             url = f"https://www.reddit.com/r/{subreddit}/"
             request = Request(url, callback=self.parse_subreddit)
