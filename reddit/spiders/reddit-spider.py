@@ -17,17 +17,16 @@ class RedditSpider(Spider):
                   "ProgrammerAnimemes"]
     scroll_urls = {e: f"https://gateway.reddit.com/desktopapi/v1/subreddits/{e}?" for e in subreddits}
     params = {e: {"rtj": "only",
-              "redditWebClient": "web2x",
-              "app": "web2x-client-production",
-              "allow_over18": "1",  # adult content lol
-              "include": "prefsSubreddit",
-              "after": "t3_icgvnd",
-              "dist": "1",
-              "layout": "card",
-              "sort": "hot",
-              "geo_filter": "RU"
-              } for e in subreddits}
-
+                  "redditWebClient": "web2x",
+                  "app": "web2x-client-production",
+                  "allow_over18": "1",  # adult content lol
+                  "include": "prefsSubreddit",
+                  "after": "t3_icgvnd",
+                  "dist": "1",
+                  "layout": "card",
+                  "sort": "hot",
+                  "geo_filter": "RU"
+                  } for e in subreddits}
 
     def parse(self, response):  # login function
         csrf_token = response.xpath("//input[@name='csrf_token']/@value").extract_first()
@@ -41,14 +40,6 @@ class RedditSpider(Spider):
                                                   "dest": "https://www.reddit.com/"},
                                         callback=self.after_login)
 
-#    def after_login(self, response): # creates request for each subreddit to crawl
-#
- #       for subreddit in subreddits:
-  #          self.subreddit = subreddit
-   #         url = f"https://www.reddit.com/r/{subreddit}/"
-    #        request = Request(url, callback=self.parse_subreddit)
-     #       yield request
-
     def after_login(self, response):  # creates request for each subreddit to crawl
         for subreddit in self.subreddits:
             print("----------{}---------".format(subreddit))  # debug
@@ -61,11 +52,6 @@ class RedditSpider(Spider):
 
         json_data = json.loads(response.text)
         subreddit = json_data["subreddits"][str(list(json_data["subreddits"].keys())[0])]["name"]  # Stupid as f
-        print(subreddit)
-        print(subreddit)
-        print(subreddit)
-        print(subreddit)
-        print(subreddit)
 
         post_wrapper = response.xpath("//div[@class = 'rpBJOHq2PR60pnwJlUyP0']")
         for post in post_wrapper.xpath("./div"):  # TODO skip parsed posts
