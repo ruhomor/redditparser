@@ -64,6 +64,7 @@ DOWNLOAD_DELAY = 1
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'reddit.pipelines.PipelineAppendOneByOne': 1,
+    'reddit.pipelines.WriteToPostgre' : 2,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
