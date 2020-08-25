@@ -43,6 +43,6 @@ class WriteToPostgre:
 
     def process_item(self, item, spider):
         print("-------------------?psql?-------------------")
-        self.cur.execute("insert into reddit_content(link,author,date,title) values(%s,%s,%d,%s)",(item['link'],item['author'],item['date'],item['title']))
+        self.cur.execute("insert into reddit_content2(link,author,date,title) values(%s,%s,%s,%s)",(item['link'],item['author'],item['date'],item['title']))
         self.connection.commit()
         return item
